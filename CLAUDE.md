@@ -4,7 +4,7 @@
 Pratyush Kukreja — pratyushkukreja.com
 
 ## What This Is
-An open-source collection of AI agents that help B2B SaaS salespeople execute deals from SQL assignment through CSM handover. Plus a personal brand website to showcase and distribute them.
+AI agents that think like a seasoned sales professional — not just execute like an eager intern who can type very fast. A three-agent pipeline that builds deal context, reads signals, and delivers strategic analysis. Plus a personal brand website to showcase and distribute them.
 
 ## Core Philosophy
 
@@ -25,22 +25,23 @@ Each agent defines a context schema (what shape the input should be). Users brin
 
 ## Architecture
 
-### The Sales Journey (Vertical Stages)
-SQL Assignment → Qualification → POC → POC Assessment → Commercial Discussion → Multithreading → Security Assessment → Contracting → Closed Won/Lost → CSM Handover
+### The Agent Pipeline
+Three agents, chained sequentially. Each agent's output is the next agent's input.
 
-### Foundation Agent (Build First)
-0. **Context Ingester** — the foundation layer. Takes a single seed (domain, email, or company name), searches all connected sources, builds a Deal Profile, and curates relevant context. Every other agent consumes its output.
+| # | Agent | Input | Output |
+|---|-------|-------|--------|
+| 1 | **Context Ingester** | Seed (domain, email, or company name) | Deal Profile: source index of meetings, channels, pages, contacts, calendar events |
+| 2 | **Signal Reader** | Deal Profile + actual content from sources | Signal clusters: what's actually true about this deal right now |
+| 3 | **Deal Advisor** | Signal clusters + deal context | Strategic analysis: how a seasoned VP Sales would read this deal |
 
-### Horizontal Agents (Cross-Stage)
-1. **Call Prep Agent** — pre-call briefs based on deal context
-2. **Post-Call Summarizer** — transcripts → structured summaries + qualification updates
-3. **Follow-Up Email Drafter** — context-aware follow-ups after any interaction
-4. **Deal Risk Monitor** — flags stalling deals, engagement drops, competitor signals
-5. **Stakeholder Tracker** — maps people, roles, sentiment, engagement across the deal
-6. **Next Best Action Engine** — "here's what to do next on this deal and why"
+### Why This Pipeline (Not 6 Agents)
+Things like call summarization, follow-up drafting, and call prep are already well-served by base LLMs with good prompts. The hard problem — and where real value lives — is: Context → Signals → Strategy. That's what this pipeline solves.
 
-### Agent Output Chaining
-Context Ingester is the true foundation — it builds the Deal Profile that all agents consume. Post-Call Summarizer is the keystone horizontal agent — its output feeds into Follow-Up Drafter, Stakeholder Tracker, Deal Risk Monitor, and Call Prep.
+### Signal Reader — Signal Clusters, Not Stages
+The Signal Reader does NOT map deals to linear CRM stages (Discovery → POC → Negotiation). Instead, it surfaces **signal clusters** — what's actually true about this deal right now. No fixed stages. The seller interprets the signals.
+
+### Deal Advisor — Strategic Analysis, Not To-Do Lists
+The Deal Advisor gives a strategic read of the deal — the kind of analysis a seasoned VP Sales would give in a deal review. It's not a checklist of tactical actions. It's a way of thinking about the deal.
 
 ### Context Ingester — Two-Step Architecture
 The Context Ingester is split into two steps to minimize token cost and enable incremental updates:
@@ -53,11 +54,11 @@ The Context Ingester is split into two steps to minimize token cost and enable i
 - Output: Deal Profile with company info, contacts, and source index
 - Sources: Fireflies, Slack, Notion, Google Calendar, Web
 
-**Step 2: Context Pull (separate agent, built next)**
+**Step 2: Signal Reader (next agent to build)**
 - Takes the Deal Profile as input
-- Uses source index to read and synthesize actual deal content
-- Can run incrementally (timestamp-based or event-triggered)
-- This is where deal signals, risk indicators, summaries live
+- Uses source index to read actual deal content (transcripts, Slack threads, meeting patterns)
+- Surfaces signal clusters — what's true about this deal right now
+- No fixed stages — signals, not checkboxes
 
 **Design Decisions:**
 - **Ambiguity handling**: exclude uncertain matches but mention them to user
@@ -76,18 +77,19 @@ Each agent ships as:
 ### Purpose
 Personal brand site. Pratyush + his projects. The sales agents toolkit is the flagship project.
 
-### Pages
-- Home / Landing
-- Why (the story, first principles philosophy)
-- Agents (showcase of all six horizontal agents)
-- Individual agent pages (setup, examples, connectors)
-- How It Works (architecture)
-- Blog (build-in-public updates)
+### Sections (single-page)
+- Hero (identity + philosophy)
+- Why (first principles thesis, 4 cards + manifesto)
+- Agents (3-agent pipeline: context-ingester, signal-reader, deal-advisor)
+- Writing (blog posts, thoughts, build logs)
+- Footer
 
 ### Tech
-- Built with frontend-design skill
-- Static site, deployable to Vercel/Netlify
-- Content-driven, not a SaaS app (yet)
+- Single HTML file: `docs/index.html`
+- Dark theme, blue accent (#60a5fa), JetBrains Mono + Outfit fonts
+- Deployed via GitHub Pages from `docs/` directory
+- Live at: https://pratkuk.github.io/sales-agents-toolkit/
+- Writing section supports three content types: article, thought, build log
 
 ## Project Structure
 ```
@@ -95,18 +97,16 @@ Builder/
 ├── CLAUDE.md
 ├── README.md
 ├── .gitignore
-├── website/              ← personal brand site
-├── agents/               ← the agents
-│   ├── context-ingester/    ← FOUNDATION — build first
-│   ├── call-prep/
-│   ├── post-call-summarizer/
-│   ├── follow-up-drafter/
-│   ├── deal-risk-monitor/
-│   ├── stakeholder-tracker/
-│   └── next-best-action/
-├── frameworks/           ← first principles framework definition
-├── connector-guides/     ← how to wire up data sources
-└── examples/             ← full deal walkthroughs
+├── docs/
+│   ├── index.html           ← website (GitHub Pages source)
+│   └── plans/               ← design docs
+├── agents/
+│   ├── context-ingester/    ← BUILT (Step 1: Deal Profile)
+│   ├── signal-reader/       ← NEXT
+│   └── deal-advisor/        ← AFTER signal-reader
+├── frameworks/              ← first principles framework definition
+├── connector-guides/        ← how to wire up data sources
+└── examples/                ← full deal walkthroughs
 ```
 
 ## Conventions
@@ -124,5 +124,7 @@ Builder/
 - Don't make the website feel like a SaaS landing page — it's a personal brand site
 
 ## Current Status
-- Phase: Building Context Ingester (Agent #0)
-- Next: Post-Call Summarizer, then website
+- Context Ingester (Step 1: Deal Profile): BUILT
+- Website: LIVE (GitHub Pages)
+- Next: Signal Reader agent
+- Then: Deal Advisor agent

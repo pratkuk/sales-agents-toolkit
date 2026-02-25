@@ -1,10 +1,12 @@
 # B2B Sales Agents Toolkit
 
-Open-source AI agents that help B2B SaaS salespeople execute deals — from the moment an SQL lands on your plate through to CSM handover.
+AI agents that think like a seasoned sales professional — not just execute like an eager intern who can type very fast.
 
 ## The Problem
 
-Sales frameworks like MEDDPIC and BANT reduce complex human conversations to checkboxes. CRMs capture data but don't help you think. And the gap between "what a great seller actually does" and "what tools help you do" is massive.
+Sales frameworks like MEDDPIC and BANT reduce complex human conversations to checkboxes. CRMs capture data but don't help you think. Most AI sales tools just move data between boxes faster.
+
+The gap between "what a great seller actually does" and "what tools help you do" is massive.
 
 ## The Approach
 
@@ -17,20 +19,21 @@ Sales frameworks like MEDDPIC and BANT reduce complex human conversations to che
 - Are we talking to the right people?
 - What has to be true for this deal to close?
 
-**No vendor lock-in.** These agents don't require specific CRMs or tools. They define what context they need, and you bring the data from whatever you use — Salesforce, HubSpot, Gong, Fireflies, or just your own notes.
+**No vendor lock-in.** These agents don't require specific CRMs or tools. They define what context they need, and you bring the data from whatever you use.
 
-## The Agents
+## The Pipeline
 
-Six horizontal agents that work across every stage of a deal:
+Three agents, chained sequentially. Each agent's output is the next agent's input.
 
-| Agent | What It Does |
-|---|---|
-| **Call Prep** | Generates pre-call briefs with talking points and open questions |
-| **Post-Call Summarizer** | Turns transcripts into structured summaries, qualification updates, and next steps |
-| **Follow-Up Drafter** | Writes context-aware follow-up emails after any interaction |
-| **Deal Risk Monitor** | Flags deals that are stalling, single-threaded, or showing warning signs |
-| **Stakeholder Tracker** | Maps every person in the deal — their role, sentiment, and engagement |
-| **Next Best Action** | Tells you what to do next on a deal and why |
+| # | Agent | What It Does | Status |
+|---|-------|-------------|--------|
+| 1 | **Context Ingester** | Give it a company name, domain, or email. It searches across your tools and builds a source index of where this deal lives. | Live |
+| 2 | **Signal Reader** | Reads deal context — transcripts, Slack threads, meeting patterns — and surfaces signal clusters. No fixed stages. Just what's true about this deal right now. | Next up |
+| 3 | **Deal Advisor** | Takes the signals and gives you a strategic read — the kind of analysis a seasoned VP Sales would give in a deal review. Not a to-do list. A way of thinking about the deal. | Next up |
+
+### Why 3 agents, not 6?
+
+Things like call summarization, follow-up drafting, and call prep are already well-served by base LLMs with a good prompt. The hard problem — and where real value lives — is building the pipeline from raw deal context to strategic insight. That's what this toolkit solves.
 
 Each agent is available as:
 - **Prompt template** — copy-paste into Claude or any LLM
@@ -38,21 +41,21 @@ Each agent is available as:
 
 ## Getting Started
 
-Pick any agent folder in `/agents` and follow its README. The **Post-Call Summarizer** is the best starting point — it's the keystone that feeds the other agents.
+Start with the **Context Ingester** in `/agents/context-ingester`. Follow its README to build your first Deal Profile.
 
 ## Project Structure
 
 ```
-agents/                   — the six horizontal agents
+agents/                   — the three pipeline agents
+docs/                     — website + design docs
 frameworks/               — first principles framework definition
 connector-guides/         — how to wire up your data sources
 examples/                 — full deal walkthroughs
-website/                  — pratyushkukreja.com source
 ```
 
 ## Built By
 
-[Pratyush Kukreja](https://pratyushkukreja.com) — building in public. Follow the journey on the blog.
+[Pratyush Kukreja](https://pratyushkukreja.com) — building in public.
 
 ## License
 
